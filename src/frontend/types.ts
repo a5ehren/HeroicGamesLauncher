@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import {
   AppSettings,
   GameInfo,
@@ -299,5 +300,5 @@ export type DMQueue = {
 
 export interface HelpItem {
   title: string
-  content: JSX.Element
+  content: ReactElement
 }

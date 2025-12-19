@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader } from '../Dialog'
 import ReactMarkdown from 'react-markdown'
-import classNames from 'classnames'
 import { Release } from 'common/types'
 import './index.scss'
 
@@ -18,39 +17,38 @@ export function ChangelogModal({ onClose, dimissVersionCheck }: Props) {
 
   useEffect(() => {
     if (!currentChangelog) {
-      window.api.getHeroicVersion().then((version) => {
+      void window.api.getHeroicVersion().then((version) => {
         if (dimissVersionCheck || version !== lastChangelog) {
-          window.api
+          void window.api
             .getCurrentChangelog()
             .then((release) => setCurrentChangelog(release))
         }
       })
     }
-  }, [])
+  }, [currentChangelog, dimissVersionCheck])
 
   if (!currentChangelog) {
-    return <></>
+    return null
   }
 
   return (
-    <div className={classNames('changelogModal')}>
-      <Dialog onClose={onClose} showCloseButton={true}>
-        <DialogHeader onClose={onClose}>
-          <div>{currentChangelog.name}</div>
-        </DialogHeader>
-        <DialogContent>
-          <div className={classNames('changelogModalContent')}>
-            {currentChangelog.body && (
-              <ReactMarkdown
-                className="changelogModalContent"
-                linkTarget={'_blank'}
-              >
-                {currentChangelog.body}
-              </ReactMarkdown>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+    <Dialog onClose={onClose} showCloseButton={true}>
+      <DialogHeader>
+        <div>{currentChangelog.name}</div>
+      </DialogHeader>
+      <DialogContent className="changelogModalContent">
+        {currentChangelog.body && (
+          <ReactMarkdown
+            components={{
+              a: ({ ...props }) => (
+                <a {...props} target="_blank" rel="noopener noreferrer" />
+              )
+            }}
+          >
+            {currentChangelog.body}
+          </ReactMarkdown>
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }

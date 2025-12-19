@@ -1,6 +1,6 @@
 import './index.css'
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { ReactElement, useContext, useEffect, useState } from 'react'
 
 import { ArrowBackIosNew, Info, Star, Monitor } from '@mui/icons-material'
 
@@ -69,7 +69,7 @@ import useSettingsContext from 'frontend/hooks/useSettingsContext'
 import SettingsContext from 'frontend/screens/Settings/SettingsContext'
 import useGlobalState from 'frontend/state/GlobalStateV2'
 
-export default React.memo(function GamePage(): JSX.Element | null {
+export default React.memo(function GamePage(): ReactElement | null {
   const { appName, runner } = useParams() as { appName: string; runner: Runner }
   const location = useLocation() as {
     state: { fromDM: boolean; gameInfo: GameInfo }

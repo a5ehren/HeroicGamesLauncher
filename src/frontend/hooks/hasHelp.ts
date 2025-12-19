@@ -1,10 +1,10 @@
 import ContextProvider from 'frontend/state/ContextProvider'
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, ReactElement } from 'react'
 
 export const hasHelp = (
   helpItemId: string,
   title: string,
-  content: JSX.Element
+  content: ReactElement
 ) => {
   const { help } = useContext(ContextProvider)
 

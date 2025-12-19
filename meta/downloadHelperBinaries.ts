@@ -43,7 +43,7 @@ async function downloadFile(url: string, dst: string) {
   }
   await mkdir(dirname(dst), { recursive: true })
   const fileStream = createWriteStream(dst, { flags: 'w' })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
   await finished(Readable.fromWeb(response.body as any).pipe(fileStream))
 }
 

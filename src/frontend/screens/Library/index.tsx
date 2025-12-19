@@ -1,6 +1,7 @@
 import './index.css'
 
 import React, {
+  ReactElement,
   useContext,
   useEffect,
   useMemo,
@@ -46,7 +47,7 @@ type SearchableGame = {
   normalizedTitle: string
 }
 
-export default React.memo(function Library(): JSX.Element {
+export default React.memo(function Library(): ReactElement {
   const { t } = useTranslation()
 
   const {

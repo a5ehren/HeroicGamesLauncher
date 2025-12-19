@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import ToggleSwitch from '../ToggleSwitch'
 import { useTranslation } from 'react-i18next'
 import LibraryContext from 'frontend/screens/Library/LibraryContext'
@@ -96,7 +96,7 @@ export default function LibraryFilters() {
     setStoresFilters(newFilters)
   }
 
-  const toggleWithOnly = (toggle: JSX.Element, onOnlyClicked: () => void) => {
+  const toggleWithOnly = (toggle: ReactElement, onOnlyClicked: () => void) => {
     return (
       <div className="toggleWithOnly">
         {toggle}

@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, JSX } from 'react'
 import ContextProvider from 'frontend/state/ContextProvider'
 import { useTranslation } from 'react-i18next'
 import ToggleSwitch from '../ToggleSwitch'

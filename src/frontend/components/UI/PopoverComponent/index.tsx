@@ -39,12 +39,15 @@ const PopoverComponent: React.FC<PopoverComponentProps> = ({
 
   return (
     <div className="popover-wrapper" ref={wrapper}>
-      {React.cloneElement(item, {
-        onClick: handleClick,
-        style: { cursor: 'pointer' }
-      })}
+      {React.cloneElement(
+        item as React.ReactElement<React.HTMLAttributes<HTMLElement>>,
+        {
+          onClick: handleClick,
+          style: { cursor: 'pointer' }
+        }
+      )}
       {open && (
-        <div id={item.props.id} className="popover">
+        <div id={(item.props as { id?: string }).id} className="popover">
           {children}
         </div>
       )}

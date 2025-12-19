@@ -18,7 +18,7 @@ interface MessageBoxModalProps {
 }
 
 // This function proper parses the message from the backend and returns HTML code with an array of spans and paragraphs
-function decodeHTML(html: string): Array<JSX.Element> {
+function decodeHTML(html: string): Array<ReactElement> {
   const txt = document.createElement('textarea')
   txt.innerHTML = html
   return txt.value.split('\n').map((item, key) => {

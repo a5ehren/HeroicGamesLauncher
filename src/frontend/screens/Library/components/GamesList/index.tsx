@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { ReactElement, useContext, useEffect, useRef } from 'react'
 import { GameInfo, Runner } from 'common/types'
 import cx from 'classnames'
 import GameCard from '../GameCard'
@@ -48,7 +48,7 @@ const GamesList = ({
   onlyInstalled = false,
   isRecent = false,
   isFavourite = false
-}: Props): JSX.Element => {
+}: Props): ReactElement => {
   const { gameUpdates, allTilesInColor, titlesAlwaysVisible } =
     useContext(ContextProvider)
   const { t } = useTranslation()

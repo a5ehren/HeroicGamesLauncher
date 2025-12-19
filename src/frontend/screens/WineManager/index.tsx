@@ -3,7 +3,14 @@ import './index.css'
 import ContextProvider from 'frontend/state/ContextProvider'
 import { UpdateComponent } from 'frontend/components/UI'
 
-import React, { lazy, useContext, useEffect, useMemo, useState } from 'react'
+import React, {
+  lazy,
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { Tab, Tabs } from '@mui/material'
 import {
@@ -28,7 +35,7 @@ const configStore = new TypeCheckedStoreFrontend('wineManagerConfigStore', {
   cwd: 'store'
 })
 
-export default function WineManager(): JSX.Element | null {
+export default function WineManager(): ReactElement | null {
   const { t } = useTranslation()
 
   hasHelp(

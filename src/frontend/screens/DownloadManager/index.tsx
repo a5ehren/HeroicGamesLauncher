@@ -1,6 +1,6 @@
 import './index.css'
 
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DMQueueElement, DownloadManagerState } from 'common/types'
 import { UpdateComponent } from 'frontend/components/UI'
@@ -11,7 +11,7 @@ import { DMQueue } from 'frontend/types'
 import DownloadManagerItem from './components/DownloadManagerItem'
 import { hasHelp } from 'frontend/hooks/hasHelp'
 
-export default React.memo(function DownloadManager(): JSX.Element | null {
+export default React.memo(function DownloadManager(): ReactElement | null {
   const { t } = useTranslation()
   const [refreshing, setRefreshing] = useState(false)
   const [state, setState] = useState<DownloadManagerState>('idle')

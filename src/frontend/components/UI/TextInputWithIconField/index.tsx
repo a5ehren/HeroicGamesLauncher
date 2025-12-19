@@ -1,4 +1,4 @@
-import { FocusEvent, ReactNode } from 'react'
+import { FocusEvent, ReactElement, ReactNode } from 'react'
 import TextInputField from '../TextInputField'
 import SvgButton from '../SvgButton'
 
@@ -6,7 +6,7 @@ interface TextInputWithIconFieldProps {
   htmlId: string
   value: string
   onChange: (newValue: string) => void
-  icon: JSX.Element
+  icon: ReactElement
   onIconClick: () => void
   afterInput?: ReactNode
   label?: string

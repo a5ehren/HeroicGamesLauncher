@@ -1,6 +1,6 @@
 import './index.css'
 
-import { useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -15,7 +15,7 @@ export function ProgressDialog(props: {
   progress: string[]
   showCloseButton: boolean
   onClose: () => void
-  children?: JSX.Element
+  children?: ReactElement
   className?: string
 }) {
   const { t } = useTranslation()
