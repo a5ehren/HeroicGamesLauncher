@@ -16,10 +16,10 @@ describe('Main - GetAvailableVersions', () => {
       expect(releases[3].version).toContain('6.16-GE-1')
     })
 
-    expect(axiosClient.get).toBeCalledWith(
+    expect(axiosClient.get).toHaveBeenCalledWith(
       'https://api.github.com/repos/GloriousEggroll/wine-ge-custom/releases?per_page=100'
     )
-    expect(logError).not.toBeCalled()
+    expect(logError).not.toHaveBeenCalled()
   })
 
   test('fetch releases succesfully independent', async () => {
@@ -34,10 +34,10 @@ describe('Main - GetAvailableVersions', () => {
         expect(releases[3].version).toContain('6.16-GE-1')
       })
 
-      expect(axiosClient.get).toBeCalledWith(
+      expect(axiosClient.get).toHaveBeenCalledWith(
         'https://api.github.com/repos/GloriousEggroll/wine-ge-custom/releases?per_page=100'
       )
-      expect(logError).not.toBeCalled()
+      expect(logError).not.toHaveBeenCalled()
     }
   })
 
@@ -49,10 +49,10 @@ describe('Main - GetAvailableVersions', () => {
         getAvailableVersions({ repositorys: [key] })
       ).resolves.toStrictEqual([])
 
-      expect(axiosClient.get).toBeCalledWith(
+      expect(axiosClient.get).toHaveBeenCalledWith(
         expect.stringContaining('https://api.github.com/repos/')
       )
-      expect(logError).toBeCalledWith(
+      expect(logError).toHaveBeenCalledWith(
         Error(
           'Could not fetch available releases from https://api.github.com/repos/GloriousEggroll/wine-ge-custom/releases with error:\n ' +
             'Could not fetch tag 404'

@@ -13,7 +13,7 @@ describe('getSteamDeckComp', () => {
 
     const result = await getSteamDeckComp('1234')
     expect(result).toStrictEqual(testProtonDBInfo)
-    expect(mockAxios).toBeCalled()
+    expect(mockAxios).toHaveBeenCalled()
   })
   test('api change', async () => {
     const mockAxios = jest.spyOn(axiosClient, 'get').mockResolvedValue({
@@ -22,7 +22,7 @@ describe('getSteamDeckComp', () => {
 
     const result = await getSteamDeckComp('1234')
     expect(result).toStrictEqual(null)
-    expect(mockAxios).toBeCalled()
+    expect(mockAxios).toHaveBeenCalled()
   })
   test('does not find game', async () => {
     const mockAxios = jest
@@ -31,8 +31,8 @@ describe('getSteamDeckComp', () => {
 
     const result = await getSteamDeckComp('1234')
     expect(result).toBeNull()
-    expect(mockAxios).toBeCalled()
-    expect(logError).toBeCalledWith(
+    expect(mockAxios).toHaveBeenCalled()
+    expect(logError).toHaveBeenCalledWith(
       ['Was not able to get Stem Deck data for 1234', undefined],
       'ExtraGameInfo'
     )
@@ -43,7 +43,7 @@ describe('getSteamDeckComp', () => {
 
     const result = await getSteamDeckComp('')
     expect(result).toBeNull()
-    expect(mockAxios).not.toBeCalled()
+    expect(mockAxios).not.toHaveBeenCalled()
   })
 })
 

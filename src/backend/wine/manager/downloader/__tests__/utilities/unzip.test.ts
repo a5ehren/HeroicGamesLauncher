@@ -120,7 +120,7 @@ describe('Utilities - Unzip', () => {
       rmSync(installDir, { recursive: true })
     }
 
-    expect(progress).toBeCalledWith({ status: 'unzipping' })
-    expect(progress).toBeCalledWith({ status: 'idle' })
+    expect(progress).toHaveBeenCalledWith({ status: 'unzipping' })
+    expect(progress).toHaveBeenCalledWith({ status: 'idle' })
   })
 })

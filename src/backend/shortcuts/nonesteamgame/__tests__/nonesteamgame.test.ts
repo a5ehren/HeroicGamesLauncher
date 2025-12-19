@@ -54,7 +54,7 @@ describe('NonSteamGame', () => {
 
     const contentAfter = readFileSync(shortcutFilePath).toString()
     expect(contentBefore).toStrictEqual(contentAfter)
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `${game.title} was successfully added to Steam.`,
       'Shortcuts'
     )
@@ -80,19 +80,19 @@ describe('NonSteamGame', () => {
     expect(contentBefore).toStrictEqual(contentAfter)
     expect(contentBefore).not.toBe(contentBetween)
     expect(contentBetween).toContain(game.title)
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `${game.title} was successfully added to Steam.`,
       'Shortcuts'
     )
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `${game.title} was successfully removed from Steam.`,
       'Shortcuts'
     )
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `Prepare Steam images for ${game.title}`,
       'Shortcuts'
     )
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `Remove Steam images for ${game.title}`,
       'Shortcuts'
     )
@@ -120,19 +120,19 @@ describe('NonSteamGame', () => {
     expect(contentAfter).toStrictEqual(
       Buffer.from([0, 115, 104, 111, 114, 116, 99, 117, 116, 115, 0, 8, 8])
     )
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `${game.title} was successfully added to Steam.`,
       'Shortcuts'
     )
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `${game.title} was successfully removed from Steam.`,
       'Shortcuts'
     )
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `Prepare Steam images for ${game.title}`,
       'Shortcuts'
     )
-    expect(logInfo).toBeCalledWith(
+    expect(logInfo).toHaveBeenCalledWith(
       `Remove Steam images for ${game.title}`,
       'Shortcuts'
     )
@@ -148,13 +148,13 @@ describe('NonSteamGame', () => {
     await addNonSteamGame({
       gameInfo: game
     })
-    expect(logInfo).not.toBeCalled()
-    expect(logError).toBeCalledWith(
+    expect(logInfo).not.toHaveBeenCalled()
+    expect(logError).toHaveBeenCalledWith(
       `Can't add "${game.title}" to Steam user "steam_user". "${shortcutFilePath}" is corrupted!\n` +
         'One of the game entries is missing the AppName parameter!',
       'Shortcuts'
     )
-    expect(showDialogBoxModalAuto).toBeCalled()
+    expect(showDialogBoxModalAuto).toHaveBeenCalled()
   })
 
   test('Catch corrupt shortcuts.vdf because of missing Exe', async () => {
@@ -168,13 +168,13 @@ describe('NonSteamGame', () => {
       gameInfo: game
     })
 
-    expect(logInfo).not.toBeCalled()
-    expect(logError).toBeCalledWith(
+    expect(logInfo).not.toHaveBeenCalled()
+    expect(logError).toHaveBeenCalledWith(
       `Can't add "${game.title}" to Steam user "steam_user". "${shortcutFilePath}" is corrupted!\n` +
         'One of the game entries is missing the Exe parameter!',
       'Shortcuts'
     )
-    expect(showDialogBoxModalAuto).toBeCalled()
+    expect(showDialogBoxModalAuto).toHaveBeenCalled()
   })
 
   test('Catch corrupt shortcuts.vdf because of missing LaunchOptions', async () => {
@@ -188,13 +188,13 @@ describe('NonSteamGame', () => {
       gameInfo: game
     })
 
-    expect(logInfo).not.toBeCalled()
-    expect(logError).toBeCalledWith(
+    expect(logInfo).not.toHaveBeenCalled()
+    expect(logError).toHaveBeenCalledWith(
       `Can't add "${game.title}" to Steam user "steam_user". "${shortcutFilePath}" is corrupted!\n` +
         'One of the game entries is missing the LaunchOptions parameter!',
       'Shortcuts'
     )
-    expect(showDialogBoxModalAuto).toBeCalled()
+    expect(showDialogBoxModalAuto).toHaveBeenCalled()
   })
 
   test(
@@ -241,39 +241,39 @@ describe('NonSteamGame', () => {
       expect(contentBefore2).toStrictEqual(contentAfter2)
       expect(contentBefore2).toStrictEqual(contentBetween2)
 
-      expect(logInfo).toBeCalledWith(
+      expect(logInfo).toHaveBeenCalledWith(
         `Prepare Steam images for ${game.title}`,
         'Shortcuts'
       )
-      expect(logInfo).toBeCalledWith(
+      expect(logInfo).toHaveBeenCalledWith(
         `Remove Steam images for ${game.title}`,
         'Shortcuts'
       )
 
-      expect(logInfo).toBeCalledTimes(2)
-      expect(logWarning).toBeCalledWith(
+      expect(logInfo).toHaveBeenCalledTimes(2)
+      expect(logWarning).toHaveBeenCalledWith(
         `${game.title} could not be added to all found Steam users.`,
         'Shortcuts'
       )
-      expect(logWarning).toBeCalledWith(
+      expect(logWarning).toHaveBeenCalledWith(
         `${game.title} could not be removed from all found Steam users.`,
         'Shortcuts'
       )
-      expect(logError).toBeCalledWith(
+      expect(logError).toHaveBeenCalledWith(
         `Can't add "${game.title}" to Steam user "steam_user2". "${shortcutFilePath2}" is corrupted!\n` +
           'One of the game entries is missing the AppName parameter!',
         'Shortcuts'
       )
-      expect(logError).toBeCalledWith(
+      expect(logError).toHaveBeenCalledWith(
         `Can't remove "${game.title}" from Steam user "steam_user2". "${shortcutFilePath2}" is corrupted!\n` +
           'One of the game entries is missing the AppName parameter!',
         'Shortcuts'
       )
-      expect(showDialogBoxModalAuto).not.toBeCalled()
+      expect(showDialogBoxModalAuto).not.toHaveBeenCalled()
     }
   )
 
-  test('Test for shortcuts.vdf provided by users/dev', async () => {
+  test('for shortcuts.vdf provided by users/dev', async () => {
     const userFiles = [
       'shortcuts_commandmc.vdf',
       'shortcuts_redromnon.vdf',
@@ -293,12 +293,12 @@ describe('NonSteamGame', () => {
 
       const contentAfter = readFileSync(shortcutFilePath).toString()
       expect(contentAfter).toContain('MyGame')
-      expect(logInfo).toBeCalledWith(
+      expect(logInfo).toHaveBeenCalledWith(
         `${game.title} was successfully added to Steam.`,
         'Shortcuts'
       )
-      expect(logError).not.toBeCalled()
-      expect(showDialogBoxModalAuto).not.toBeCalled()
+      expect(logError).not.toHaveBeenCalled()
+      expect(showDialogBoxModalAuto).not.toHaveBeenCalled()
     }
   })
 })

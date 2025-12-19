@@ -14,7 +14,7 @@ const testTarFilePath = join(__dirname, 'test_data/TestArchive.tar.xz')
 afterEach(jest.restoreAllMocks)
 
 describeSkipOnWindows('getAssetDataFromDownload', () => {
-  it('Success', async () => {
+  it('Successfully gets asset data from GitHub API', async () => {
     // https://stackoverflow.com/a/43047378
     jest.spyOn(axiosClient, 'get').mockResolvedValue(test_data)
 
@@ -22,7 +22,7 @@ describeSkipOnWindows('getAssetDataFromDownload', () => {
       name: 'Heroic-2.3.9.AppImage',
       url: 'https://api.github.com/repos/Heroic-Games-Launcher/HeroicGamesLauncher/releases/assets/68579064'
     })
-    expect(axiosClient.get).toBeCalledWith(
+    expect(axiosClient.get).toHaveBeenCalledWith(
       'https://api.github.com/repos/Heroic-Games-Launcher/HeroicGamesLauncher/releases/tags/v2.3.9'
     )
   })
@@ -54,7 +54,7 @@ describeSkipOnWindows('getAssetDataFromDownload', () => {
   })
 
   // https://axios-http.com/docs/handling_errors
-  it('Axios error', async () => {
+  it('Handles axios error when accessing GitHub API', async () => {
     expect.assertions(1)
 
     jest.spyOn(axiosClient, 'get').mockRejectedValue({
@@ -67,7 +67,7 @@ describeSkipOnWindows('getAssetDataFromDownload', () => {
 })
 
 describeSkipOnWindows('downloadFile', () => {
-  it('Success', async () => {
+  it('Successfully downloads file to disk', async () => {
     const expectedData = readFileSync(testTarFilePath)
 
     jest.spyOn(axiosClient, 'get').mockResolvedValue({
@@ -88,14 +88,14 @@ describeSkipOnWindows('downloadFile', () => {
 
     const tmpFileName = '/tmp/someFile'
     await expect(downloadFile(testUrl, tmpFileName)).resolves.toBeUndefined()
-    expect(graceful_fs.writeFile).toBeCalledWith(
+    expect(graceful_fs.writeFile).toHaveBeenCalledWith(
       tmpFileName,
       expectedData,
       expect.anything()
     )
   })
 
-  it('Axios error', async () => {
+  it('Handles axios error when downloading file', async () => {
     expect.assertions(1)
 
     jest.spyOn(axiosClient, 'get').mockRejectedValue({

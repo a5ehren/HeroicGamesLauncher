@@ -1,7 +1,7 @@
 import { createMainWindow } from '../main_window'
 import { sendFrontendMessage } from '../ipc'
 import { BrowserWindow, Display, screen } from 'electron'
-import { overrideProcessPlatform } from './constants.test'
+import { overrideProcessPlatform } from './test-utils'
 import { configStore } from 'backend/constants/key_value_stores'
 
 jest.mock('../logger')
@@ -43,7 +43,7 @@ describe('main_window', () => {
       it('sends a message to its webContents', () => {
         sendFrontendMessage('message', 'param1', 'param2')
 
-        expect(window.webContents.send).toBeCalledWith(
+        expect(window.webContents.send).toHaveBeenCalledWith(
           'message',
           'param1',
           'param2'

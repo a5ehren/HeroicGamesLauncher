@@ -272,6 +272,9 @@ importers:
       eslint-plugin-import-x:
         specifier: ^4.16.1
         version: 4.16.1(@typescript-eslint/utils@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1))
+      eslint-plugin-jest:
+        specifier: ^29.5.0
+        version: 29.5.0(@typescript-eslint/eslint-plugin@8.50.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(jest@29.7.0(@types/node@22.19.3(patch_hash=8c1b2354f08e74aa2381e5f6c314a45bb82ae9f8763bf63f0e1b6797e9232831))(babel-plugin-macros@3.1.0))(typescript@5.9.3)
       eslint-plugin-react:
         specifier: ^7.37.5
         version: 7.37.5(eslint@9.39.2(jiti@2.6.1))
@@ -3576,6 +3579,19 @@ packages:
       '@typescript-eslint/utils':
         optional: true
       eslint-import-resolver-node:
+        optional: true
+
+  eslint-plugin-jest@29.5.0:
+    resolution: {integrity: sha512-DAi9H8xN/TUuNOt+xDP1RqpCJLsSxBb5u1zXSpCyp0VAWGL8MBAg5t7/Dk+76iX7d1LhWu4DDH77IQNUolLDyg==}
+    engines: {node: ^20.12.0 || ^22.0.0 || >=24.0.0}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^8.0.0
+      eslint: ^8.57.0 || ^9.0.0
+      jest: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+      jest:
         optional: true
 
   eslint-plugin-react-hooks@7.0.1:
@@ -10190,6 +10206,17 @@ snapshots:
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
       - supports-color
+
+  eslint-plugin-jest@29.5.0(@typescript-eslint/eslint-plugin@8.50.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(jest@29.7.0(@types/node@22.19.3(patch_hash=8c1b2354f08e74aa2381e5f6c314a45bb82ae9f8763bf63f0e1b6797e9232831))(babel-plugin-macros@3.1.0))(typescript@5.9.3):
+    dependencies:
+      '@typescript-eslint/utils': 8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+      eslint: 9.39.2(jiti@2.6.1)
+    optionalDependencies:
+      '@typescript-eslint/eslint-plugin': 8.50.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+      jest: 29.7.0(@types/node@22.19.3(patch_hash=8c1b2354f08e74aa2381e5f6c314a45bb82ae9f8763bf63f0e1b6797e9232831))(babel-plugin-macros@3.1.0)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   eslint-plugin-react-hooks@7.0.1(eslint@9.39.2(jiti@2.6.1)):
     dependencies:

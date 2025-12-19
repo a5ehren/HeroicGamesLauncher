@@ -6,6 +6,7 @@ import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import prettier from 'eslint-config-prettier'
 import { importX } from 'eslint-plugin-import-x'
+import jest from 'eslint-plugin-jest'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -75,10 +76,42 @@ export default tseslint.config(
   {
     files: ['**/__tests__/**/*.ts', '**/__mocks__/**/*.ts'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off'
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off'
     }
   },
   {
-    ignores: ['build/', '**/*.js', 'eslint.config.mjs']
+    ignores: ['build/', '**/*.js', 'eslint.config.mjs', 'scripts/']
+  },
+  {
+    files: ['**/__tests__/**', '**/__mocks__/**'],
+    ...jest.configs['flat/recommended'],
+    rules: {
+      ...jest.configs['flat/recommended'].rules,
+      'jest/no-standalone-expect': [
+        'error',
+        {
+          additionalTestBlockFunctions: ['testSkipOnWindows']
+        }
+      ]
+    }
+  },
+  {
+    files: [
+      '**/__tests__/performance/**/*.test.ts',
+      '**/__tests__/performance/**/*.test.tsx'
+    ],
+    rules: {
+      'jest/expect-expect': [
+        'warn',
+        {
+          assertFunctionNames: [
+            'expect',
+            'assertPerformanceThresholds',
+            'assertReactPerformanceThresholds'
+          ]
+        }
+      ]
+    }
   }
 )

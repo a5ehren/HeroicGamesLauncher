@@ -83,7 +83,7 @@ describe('getInfoFromAppleGamingWiki', () => {
 
     const result = await getInfoFromAppleGamingWiki('The Witcher 3')
     expect(result).toBeNull()
-    expect(logError).toBeCalledWith(
+    expect(logError).toHaveBeenCalledWith(
       [
         'Was not able to get AppleGamingWiki data for The Witcher 3',
         Error('Failed')

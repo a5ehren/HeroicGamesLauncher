@@ -1,15 +1,5 @@
 import { fixAsarPath } from 'backend/constants/paths'
-
-export function overrideProcessPlatform(os: string): string {
-  const original_os = process.platform
-
-  // override process.platform
-  Object.defineProperty(process, 'platform', {
-    value: os
-  })
-
-  return original_os
-}
+import { overrideProcessPlatform } from './test-utils'
 
 jest.mock('../logger')
 
@@ -19,7 +9,7 @@ describe('Constants - fixAsarPath', () => {
     expect(fixed_path).toBe('path/app.asar.unpacked/bin')
   })
 
-  test(' no need to fix path and replace is skipped', () => {
+  test('no need to fix path and replace is skipped', () => {
     const fixed_path = fixAsarPath('fixed/path/app.asar.unpacked/bin')
     expect(fixed_path).toBe('fixed/path/app.asar.unpacked/bin')
   })
