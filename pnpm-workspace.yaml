@@ -13,3 +13,9 @@ onlyBuiltDependencies:
   - esbuild
   - register-scheme
   - unrs-resolver
+
+overrides:
+  brace-expansion: ^2.0.2
+  js-yaml: ^4.1.1
+  got: ^11.8.5
+  cross-spawn: ^6.0.6
