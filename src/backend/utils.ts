@@ -488,13 +488,12 @@ function getNileBin(): { dir: string; bin: string } {
 export function createNecessaryFolders() {
   const defaultFolders = [gamesConfigPath, heroicIconFolder]
 
-  const necessaryFoldersByPlatform = {
-    win32: [...defaultFolders],
-    linux: [...defaultFolders, toolsPath],
-    darwin: [...defaultFolders, toolsPath]
-  }
+  // On Windows: default folders only, on macOS/Linux: default folders + toolsPath
+  const necessaryFolders = isWindows
+    ? defaultFolders
+    : [...defaultFolders, toolsPath]
 
-  necessaryFoldersByPlatform[process.platform].forEach((folder: string) => {
+  necessaryFolders.forEach((folder: string) => {
     if (!existsSync(folder)) {
       mkdirSync(folder)
     }

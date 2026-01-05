@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { BrowserWindow } from 'electron'
 import { initTrayIcon, testingExportsTrayIcon } from '../tray_icon'
 import { backendEvents } from '../../backend_events'
@@ -8,6 +11,13 @@ import { configStore } from 'backend/constants/key_value_stores'
 
 jest.mock('../../logger')
 jest.mock('../../config')
+jest.mock('backend/constants/environment', () => ({
+  isMac: false,
+  isLinux: true,
+  isWindows: false,
+  isSteamDeck: false,
+  isFlatpak: false
+}))
 
 const wait = async (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
@@ -251,10 +261,16 @@ describe('TrayIcon', () => {
   describe('icon', () => {
     // the mock returns the icon path, the width, and the height
     it('shows different size per platform', () => {
-      let icon = testingExportsTrayIcon.getIcon('linux')
+      const environment = require('backend/constants/environment')
+
+      // Test Linux/Windows (32x32)
+      environment.isMac = false
+      let icon = testingExportsTrayIcon.getIcon()
       expect(icon).toMatch(/.*icon-light.png width=32 height=32/)
 
-      icon = testingExportsTrayIcon.getIcon('darwin')
+      // Test macOS (20x20)
+      environment.isMac = true
+      icon = testingExportsTrayIcon.getIcon()
       expect(icon).toMatch(/.*icon-light.png width=20 height=20/)
     })
 

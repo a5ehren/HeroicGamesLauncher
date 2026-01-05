@@ -20,7 +20,7 @@ export const initTrayIcon = async (mainWindow: BrowserWindow) => {
   if (noTrayIcon) return null
 
   // create icon
-  const appIcon = new Tray(getIcon(process.platform))
+  const appIcon = new Tray(getIcon())
 
   // helper function to set/update the context menu and on macOS the dock menu
   const loadContextMenu = async (recentGames?: RecentGame[]) => {
@@ -45,7 +45,7 @@ export const initTrayIcon = async (mainWindow: BrowserWindow) => {
   addListener('changeTrayColor', () => {
     logInfo('Changing Tray icon Color...', LogPrefix.Backend)
     setTimeout(async () => {
-      appIcon.setImage(getIcon(process.platform))
+      appIcon.setImage(getIcon())
       await loadContextMenu()
     }, 500)
   })
@@ -61,29 +61,17 @@ export const initTrayIcon = async (mainWindow: BrowserWindow) => {
   return appIcon
 }
 
-const iconSizesByPlatform = {
-  darwin: {
-    width: 20,
-    height: 20
-  },
-  linux: {
-    width: 32,
-    height: 32
-  },
-  win32: {
-    width: 32,
-    height: 32
-  }
-}
-
 // get the icon path based on platform and settings
-const getIcon = (platform = process.platform) => {
+const getIcon = () => {
   const settings = GlobalConfig.get().getSettings()
   const { darkTrayIcon } = settings
 
+  // 20x20 on macOS, 32x32 everywhere else
+  const iconSize = isMac ? { width: 20, height: 20 } : { width: 32, height: 32 }
+
   return nativeImage
     .createFromPath(darkTrayIcon ? iconDark : iconLight)
-    .resize(iconSizesByPlatform[platform])
+    .resize(iconSize)
 }
 
 // generate the context menu
