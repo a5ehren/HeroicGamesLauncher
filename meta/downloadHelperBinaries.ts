@@ -80,25 +80,24 @@ async function downloadGithubAssets(
     'x64' | 'arm64',
     Partial<Record<SupportedPlatform, string>>
   >
-) {
-  const downloadPromises = Object.entries(assetNames).map(
-    async ([arch, platformFilenameMap]) =>
-      Promise.all(
-        Object.entries(platformFilenameMap).map(([platform, filename]) => {
-          if (!filename) return
-          return downloadAsset(
+): Promise<void> {
+  const downloadPromises = Object.entries(assetNames).flatMap(
+    ([arch, platformFilenameMap]) =>
+      Object.entries(platformFilenameMap)
+        .filter((entry): entry is [string, string] => Boolean(entry[1]))
+        .map(([platform, filename]) =>
+          downloadAsset(
             binaryName,
             repo,
             tagName,
             arch,
-            platform as keyof typeof platformFilenameMap,
+            platform as SupportedPlatform,
             filename
           )
-        })
-      )
+        )
   )
 
-  return Promise.all(downloadPromises)
+  await Promise.all(downloadPromises)
 }
 
 async function downloadLegendary() {
