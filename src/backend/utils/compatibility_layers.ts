@@ -5,8 +5,9 @@ import { execSync } from 'child_process'
 import { GameSettings, WineInstallation } from 'common/types'
 import { existsSync, mkdirSync, readFileSync, readdirSync } from 'graceful-fs'
 import { homedir } from 'os'
-import { dirname, join } from 'path'
+import { basename, dirname, isAbsolute, join } from 'path'
 import { PlistObject, parse as plistParse } from 'plist'
+import { parse as parseVdf } from '@node-steam/vdf'
 import LaunchCommand from '../storeManagers/legendary/commands/launch'
 import { NonEmptyString } from '../storeManagers/legendary/commands/base'
 import { Path } from 'backend/schemas'
@@ -18,6 +19,7 @@ import {
   userHome
 } from 'backend/constants/paths'
 import { isLinux, isMac } from 'backend/constants/environment'
+import { globSync } from 'node:fs'
 
 /**
  * Loads the default wine installation path and version.
@@ -109,6 +111,170 @@ export function getWineLibs(wineBin: string): {
   return ret
 }
 
+/**
+ * Type guard to check if value is a plain object
+ */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+/**
+ * Extracts and validates install_path from a tool object
+ */
+function extractInstallPath(tool: unknown, vdfPath: string): string | null {
+  if (!isRecord(tool)) return null
+
+  const installPath = tool.install_path
+  if (typeof installPath !== 'string' || !installPath) {
+    logError(
+      [
+        `Malformed VDF file ${basename(vdfPath)}: install_path is required but not found`
+      ],
+      LogPrefix.GlobalConfig
+    )
+    return null
+  }
+
+  return installPath
+}
+
+/**
+ * Parses a VDF file to extract Proton compatibility tool information
+ * @param vdfPath Absolute path to the VDF file
+ * @param itemName The name of the item (directory or VDF file)
+ * @param itemDir The directory containing the VDF file
+ * @returns WineInstallation object if valid proton installation found, null otherwise
+ */
+function parseProtonVdfFile(
+  vdfPath: string,
+  itemName: string,
+  itemDir: string
+): WineInstallation | null {
+  let vdfContent: string
+  try {
+    vdfContent = readFileSync(vdfPath, 'utf-8')
+  } catch (error) {
+    logError(
+      [`Failed to read VDF file ${basename(vdfPath)}:`, error],
+      LogPrefix.GlobalConfig
+    )
+    return null
+  }
+
+  let parsedVdf: unknown
+  try {
+    parsedVdf = parseVdf(vdfContent)
+  } catch (error) {
+    logError(
+      [`Failed to parse VDF file ${basename(vdfPath)}:`, error],
+      LogPrefix.GlobalConfig
+    )
+    return null
+  }
+
+  if (!isRecord(parsedVdf)) return null
+
+  const compatTools = parsedVdf.compatibilitytools
+  if (!isRecord(compatTools)) return null
+
+  const tools = compatTools.compat_tools
+  if (!isRecord(tools)) return null
+
+  const toolKeys = Object.keys(tools)
+  if (toolKeys.length === 0) return null
+
+  const firstTool = tools[toolKeys[0]]
+  const installPath = extractInstallPath(firstTool, vdfPath)
+  if (!installPath) return null
+
+  const displayName =
+    (firstTool as Record<string, unknown>).display_name || itemName
+  if (typeof displayName !== 'string') return null
+
+  // Determine proton binary path
+  // install_path can be absolute (e.g., "/opt/proton-cachyos") or relative
+  const protonBin = isAbsolute(installPath)
+    ? join(installPath, 'proton')
+    : join(itemDir, installPath, 'proton')
+
+  // Only return if the proton binary actually exists
+  if (!existsSync(protonBin)) {
+    logError(
+      [`Proton binary not found at ${protonBin} for ${displayName}`],
+      LogPrefix.GlobalConfig
+    )
+    return null
+  }
+
+  return {
+    bin: protonBin,
+    name: displayName,
+    type: 'proton'
+  }
+}
+
+/**
+ * Scans a single directory for Proton installations
+ * @param path The directory path to scan
+ * @returns Set of WineInstallation objects found in the directory
+ */
+function scanProtonPath(path: string): Set<WineInstallation> {
+  if (!existsSync(path)) return new Set()
+
+  try {
+    // Get installations from VDF files
+    const vdfPaths = globSync('{*.vdf,*/*.vdf}', {
+      cwd: path
+    }).filter((vdfPath) => !vdfPath.includes('UMU-Latest'))
+
+    const vdfInstallations = vdfPaths
+      .map((vdfPath) => {
+        const absoluteVdfPath = join(path, vdfPath)
+        const isDirectVdf = dirname(vdfPath) === '.'
+        const itemDir = isDirectVdf ? path : join(path, dirname(vdfPath))
+        const itemName = isDirectVdf
+          ? basename(vdfPath, '.vdf')
+          : basename(dirname(vdfPath))
+
+        return parseProtonVdfFile(absoluteVdfPath, itemName, itemDir)
+      })
+      .filter(
+        (installation): installation is WineInstallation =>
+          installation !== null
+      )
+
+    // Track which directories were processed via VDF
+    const processedDirs = new Set(
+      vdfPaths
+        .filter((vdfPath) => dirname(vdfPath) !== path)
+        .map((vdfPath) => dirname(vdfPath))
+    )
+
+    // Fallback: get installations from proton binaries not covered by VDF files
+    // The compatibility-tool code will have to be refactored once Valve starts packaging FEX alongside Proton
+    const protonInstallations = globSync('*/proton', {
+      cwd: path
+    })
+      .map((protonBin) => ({
+        protonBin: join(path, protonBin),
+        itemDir: dirname(protonBin),
+        itemName: basename(dirname(protonBin))
+      }))
+      .filter(({ itemName }) => !itemName.startsWith('UMU-Latest'))
+      .filter(({ itemDir }) => !processedDirs.has(itemDir))
+      .map(({ protonBin, itemName }) => ({
+        bin: protonBin,
+        name: itemName,
+        type: 'proton' as const
+      }))
+
+    return new Set([...vdfInstallations, ...protonInstallations])
+  } catch (error) {
+    logError([`Failed to scan path ${path}:`, error], LogPrefix.GlobalConfig)
+    return new Set()
+  }
+}
+
 export async function getLinuxWineSet(
   scanCustom?: boolean
 ): Promise<Set<WineInstallation>> {
@@ -167,26 +333,10 @@ export async function getLinuxWineSet(
 
   const proton = new Set<WineInstallation>()
 
-  protonPaths.forEach((path) => {
-    if (existsSync(path)) {
-      readdirSync(path).forEach((version) => {
-        // Only relevant to Lutris
-        if (version.startsWith('UMU-Latest')) {
-          return
-        }
-        const protonBin = join(path, version, 'proton')
-        // check if bin exists to avoid false positives
-        if (existsSync(protonBin)) {
-          proton.add({
-            bin: protonBin,
-            name: version,
-            type: 'proton'
-            // No need to run this.getWineExecs here since Proton ships neither Wineboot nor Wineserver
-          })
-        }
-      })
-    }
-  })
+  for (const path of protonPaths) {
+    const pathInstallations = scanProtonPath(path)
+    pathInstallations.forEach((installation) => proton.add(installation))
+  }
 
   const defaultWineSet = new Set<WineInstallation>()
   const defaultWine = getDefaultWine()
