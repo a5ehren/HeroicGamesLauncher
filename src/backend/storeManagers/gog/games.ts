@@ -73,7 +73,7 @@ import {
 } from '../../shortcuts/shortcuts/shortcuts'
 import setup from './setup'
 import { removeNonSteamGame } from '../../shortcuts/nonesteamgame/nonesteamgame'
-import shlex from 'shlex'
+import * as shlex from 'shlex'
 import {
   GOGCloudSavesLocation,
   GOGSessionSyncQueueItem,

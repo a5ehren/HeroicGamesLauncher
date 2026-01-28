@@ -42,8 +42,13 @@ export function ChangelogModal({ onClose, dimissVersionCheck }: Props) {
           <div className={classNames('changelogModalContent')}>
             {currentChangelog.body && (
               <ReactMarkdown
-                className="changelogModalContent"
-                linkTarget={'_blank'}
+                components={{
+                  a: ({ children, href }) => (
+                    <a href={href} target="_blank" rel="noopener noreferrer">
+                      {children}
+                    </a>
+                  )
+                }}
               >
                 {currentChangelog.body}
               </ReactMarkdown>

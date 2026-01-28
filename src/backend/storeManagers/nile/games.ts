@@ -41,7 +41,7 @@ import {
   getWineFlagsArray,
   isUmuSupported
 } from 'backend/utils/compatibility_layers'
-import shlex from 'shlex'
+import * as shlex from 'shlex'
 import {
   killPattern,
   moveOnUnix,

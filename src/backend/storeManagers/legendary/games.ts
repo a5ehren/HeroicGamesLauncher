@@ -56,7 +56,7 @@ import {
 import { join } from 'path'
 import { gameInfoStore } from './electronStores'
 import { removeNonSteamGame } from '../../shortcuts/nonesteamgame/nonesteamgame'
-import shlex from 'shlex'
+import * as shlex from 'shlex'
 import { t } from 'i18next'
 import { isOnline } from '../../online_monitor'
 import { showDialogBoxModalAuto } from '../../dialog/dialog'

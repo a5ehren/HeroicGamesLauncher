@@ -23,7 +23,7 @@ describeSkipOnWindows('getAssetDataFromDownload', () => {
       name: 'Heroic-2.3.9.AppImage',
       url: 'https://api.github.com/repos/Heroic-Games-Launcher/HeroicGamesLauncher/releases/assets/68579064'
     })
-    expect(axiosClient.get).toBeCalledWith(
+    expect(axiosClient.get).toHaveBeenCalledWith(
       'https://api.github.com/repos/Heroic-Games-Launcher/HeroicGamesLauncher/releases/tags/v2.3.9'
     )
   })
@@ -89,7 +89,7 @@ describeSkipOnWindows('downloadFile', () => {
 
     const tmpFileName = '/tmp/someFile'
     await expect(downloadFile(testUrl, tmpFileName)).resolves.toBeUndefined()
-    expect(graceful_fs.writeFile).toBeCalledWith(
+    expect(graceful_fs.writeFile).toHaveBeenCalledWith(
       tmpFileName,
       expectedData,
       expect.anything()

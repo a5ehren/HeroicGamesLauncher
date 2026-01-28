@@ -21,7 +21,7 @@ import {
   setupWrappers
 } from '../../launcher'
 import { access, chmod } from 'fs/promises'
-import shlex from 'shlex'
+import * as shlex from 'shlex'
 import { showDialogBoxModalAuto } from '../../dialog/dialog'
 import {
   createAbortController,
@@ -226,7 +226,7 @@ export async function launchGame(
 
       if (wrappers.length > 0) {
         extraArgs.unshift(...wrappers, executable)
-        executable = extraArgs.shift()!
+        executable = extraArgs.shift() as string
       }
       const logFileWriter = await createGameLogWriter(appName, 'sideload')
 

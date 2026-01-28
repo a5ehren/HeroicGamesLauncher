@@ -99,7 +99,7 @@ describe('getInfoFromPCGamingWiki', () => {
 
     const result = await getInfoFromPCGamingWiki('The Witcher 3')
     expect(result).toBeNull()
-    expect(logError).toBeCalledWith(
+    expect(logError).toHaveBeenCalledWith(
       [
         'Was not able to get PCGamingWiki data for The Witcher 3',
         Error('Failed')

@@ -17,7 +17,7 @@ import {
 import { getWinePath, runWineCommand, verifyWinePrefix } from '../../launcher'
 import { getGameInfo as getGogLibraryGameInfo } from 'backend/storeManagers/gog/library'
 import { readFile } from 'node:fs/promises'
-import shlex from 'shlex'
+import * as shlex from 'shlex'
 import {
   GOGRedistManifest,
   GOGv1Manifest,

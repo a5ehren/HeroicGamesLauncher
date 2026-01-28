@@ -35,7 +35,7 @@ describe('getInfoFromGamesDB', () => {
 
     const result = await getInfoFromGamesDB('Jotun', 'Grouse', 'legendary')
     expect(result).toStrictEqual({ steamID: '' })
-    expect(logError).toBeCalledWith(
+    expect(logError).toHaveBeenCalledWith(
       ['Was not able to get GamesDB data for Grouse', 'Failed'],
       'ExtraGameInfo'
     )

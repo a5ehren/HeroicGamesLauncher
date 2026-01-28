@@ -28,7 +28,7 @@ describe('Utilities - Rest', () => {
   test('unlink of folder fails', async () => {
     expect(() => {
       unlinkFile(__dirname)
-    }).toThrowError(
+    }).toThrow(
       `Couldn't remove ${workDir}/src/backend/wine/manager/downloader/__tests__/utilities!`
     )
   })

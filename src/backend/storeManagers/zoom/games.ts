@@ -48,7 +48,7 @@ import {
   removeShortcuts as removeShortcutsUtil
 } from '../../shortcuts/shortcuts/shortcuts'
 import { removeNonSteamGame } from '../../shortcuts/nonesteamgame/nonesteamgame'
-import shlex from 'shlex'
+import * as shlex from 'shlex'
 import { ZoomInstallPlatform, ZoomDownloadFile } from 'common/types/zoom'
 import { t } from 'i18next'
 import { showDialogBoxModalAuto } from '../../dialog/dialog'

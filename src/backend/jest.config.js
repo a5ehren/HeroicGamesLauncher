@@ -17,11 +17,14 @@ module.exports = {
   roots: ['<rootDir>/src/backend'],
 
   testMatch: ['**/__tests__/**/*.test.ts'],
-  // Jest transformations -- this adds support for TypeScript
-  // using ts-jest
+  // Jest transformations -- this adds support for TypeScript and JavaScript
+  // using ts-jest. Pattern includes [tj]sx? to also transform JS files from
+  // node_modules that use ESM syntax (like shlex)
   transform: {
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.[tj]sx?$': 'ts-jest'
   },
+  // Transform ESM modules in node_modules (they're ignored by default)
+  transformIgnorePatterns: ['node_modules/(?!(shlex)/)'],
 
   modulePaths: [compilerOptions.baseUrl]
 }

@@ -123,7 +123,7 @@ describe('backend/utils.ts', () => {
       jest.spyOn(axiosClient, 'get').mockRejectedValue('Failed to fetch!')
 
       const releases = await utils.getLatestReleases()
-      expect(logError).toBeCalledWith(
+      expect(logError).toHaveBeenCalledWith(
         ['Error when checking for Heroic updates', 'Failed to fetch!'],
         'Backend'
       )

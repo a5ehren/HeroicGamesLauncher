@@ -162,12 +162,12 @@ describe('TrayIcon', () => {
         it('reloads the menu with the new language', async () => {
           // mock some translation
           const original_t = i18next.t
-          jest.spyOn(i18next, 't').mockImplementation((key) => {
+          jest.spyOn(i18next, 't').mockImplementation(((key: string) => {
             if (key === 'tray.quit') {
               return i18next.language === 'es' ? 'Salir' : 'Quit'
             }
-            return key as string
-          })
+            return key
+          }) as typeof i18next.t)
 
           // check it renders english
           i18next.language = 'en'
