@@ -148,6 +148,15 @@ export default function WebView() {
   }
 
   const [webviewPreloadPath, setWebviewPreloadPath] = useState('')
+  const [webviewElement, setWebviewElement] =
+    useState<Electron.WebviewTag | null>(null)
+
+  const [showAdtractionWarning, setShowAdtractionWarning] =
+    useState<boolean>(false)
+
+  const [dontShowAdtractionWarning, setDontShowAdtractionWarning] =
+    useState<boolean>(false)
+
   useEffect(() => {
     const fetchWebviewPreloadPath = async () => {
       const path = await window.api.getWebviewPreloadPath()
@@ -156,6 +165,13 @@ export default function WebView() {
 
     void fetchWebviewPreloadPath()
   }, [])
+
+  // Track when webview ref becomes available after render
+  useEffect(() => {
+    if (webviewRef.current && !webviewElement) {
+      setWebviewElement(webviewRef.current)
+    }
+  })
 
   useLayoutEffect(() => {
     const webview = webviewRef.current
@@ -250,7 +266,7 @@ export default function WebView() {
       }
     }
     return
-  }, [webviewRef.current, amazonLoginData, runner, webviewPreloadPath])
+  }, [amazonLoginData, runner, webviewPreloadPath, webviewElement])
 
   useEffect(() => {
     const webview = webviewRef.current
@@ -293,17 +309,11 @@ export default function WebView() {
     }
 
     return
-  }, [webviewRef.current, store, runner])
+  }, [store, runner, webviewElement])
 
   const [showLoginWarningFor, setShowLoginWarningFor] = useState<
     null | 'epic' | 'gog' | 'amazon' | 'zoom'
   >(null)
-
-  const [showAdtractionWarning, setShowAdtractionWarning] =
-    useState<boolean>(false)
-
-  const [dontShowAdtractionWarning, setDontShowAdtractionWarning] =
-    useState<boolean>(false)
 
   useEffect(() => {
     if (
@@ -360,7 +370,7 @@ export default function WebView() {
     return () => {
       document.removeEventListener('mouseup', handleMouseBackForward)
     }
-  }, [webviewRef.current])
+  }, [webviewElement])
 
   if (!webviewPreloadPath) {
     return <></>
@@ -368,9 +378,9 @@ export default function WebView() {
 
   return (
     <div className="WebView">
-      {webviewRef.current && (
+      {webviewElement && (
         <WebviewControls
-          webview={webviewRef.current}
+          webview={webviewElement}
           initURL={startUrl}
           openInBrowser={!startUrl.startsWith('login')}
         />

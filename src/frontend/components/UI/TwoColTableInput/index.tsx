@@ -103,13 +103,15 @@ export function TableInput({
     const index = rowData.findIndex(
       (entry: ColumnProps) => entry.key === row.key
     )
+    let updatedRowData: ColumnProps[]
     if (index >= 0) {
-      rowData[index].value = row.value
+      updatedRowData = [...rowData]
+      updatedRowData[index].value = row.value
     } else {
-      rowData.push(row)
+      updatedRowData = [...rowData, row]
     }
-    setRowData([...rowData])
-    onChange(rowData)
+    setRowData(updatedRowData)
+    onChange(updatedRowData)
     setNewVarName('')
     setNewVarValue('')
     setOriginalInputs(EMPTY_INPUTS)
@@ -118,9 +120,10 @@ export function TableInput({
 
   function removeRow(row: ColumnProps) {
     const index = rowData.findIndex((entry) => entry === row)
-    rowData.splice(index, 1)
-    setRowData([...rowData])
-    onChange(rowData)
+    const updatedRowData = [...rowData]
+    updatedRowData.splice(index, 1)
+    setRowData(updatedRowData)
+    onChange(updatedRowData)
   }
 
   function editRow(row: ColumnProps) {

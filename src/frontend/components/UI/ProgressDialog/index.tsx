@@ -44,10 +44,16 @@ export function ProgressDialog(props: {
   }
 
   useEffect(() => {
-    if (logRef.current) {
-      logRef.current.addEventListener('scroll', onLogScroll)
+    const logElement = logRef.current
+    if (logElement) {
+      logElement.addEventListener('scroll', onLogScroll)
     }
-  }, [logRef.current])
+    return () => {
+      if (logElement) {
+        logElement.removeEventListener('scroll', onLogScroll)
+      }
+    }
+  }, [])
 
   return (
     <>

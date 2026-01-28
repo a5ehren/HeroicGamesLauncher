@@ -84,17 +84,19 @@ async function downloadGithubAssets(
   const downloadPromises = Object.entries(assetNames).map(
     async ([arch, platformFilenameMap]) =>
       Promise.all(
-        Object.entries(platformFilenameMap).map(([platform, filename]) => {
-          if (!filename) return
-          return downloadAsset(
-            binaryName,
-            repo,
-            tagName,
-            arch,
-            platform as keyof typeof platformFilenameMap,
-            filename
-          )
-        })
+        Object.entries(platformFilenameMap)
+          .map(([platform, filename]) => {
+            if (!filename) return
+            return downloadAsset(
+              binaryName,
+              repo,
+              tagName,
+              arch,
+              platform as keyof typeof platformFilenameMap,
+              filename
+            )
+          })
+          .filter((promise) => promise !== undefined)
       )
   )
 

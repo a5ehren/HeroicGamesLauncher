@@ -7,20 +7,25 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import prettier from 'eslint-config-prettier'
 import { importX } from 'eslint-plugin-import-x'
 
-export default tseslint.config(
+/** @type {import('typescript-eslint').ConfigArray} */
+export default [
   eslint.configs.recommended,
-  tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.recommendedTypeChecked,
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
   react.configs.flat.recommended,
   react.configs.flat['jsx-runtime'],
-  reactHooks.configs['recommended-latest'],
+  reactHooks.configs.flat['recommended-latest'],
   prettier,
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       // React hooks rules
       'react-hooks/rules-of-hooks': 'warn',
+      // FIXME: Will work on these during React 19 upgrade
+      'react-hooks/preserve-manual-memoization': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/set-state-in-render': 'warn',
 
       // FIXME: All of these rules should be errors instead
       '@typescript-eslint/no-base-to-string': 'warn',
@@ -79,4 +84,4 @@ export default tseslint.config(
   {
     ignores: ['build/', '**/*.js', 'eslint.config.mjs']
   }
-)
+]

@@ -98,20 +98,21 @@ const GamesList = ({
   }, [library])
 
   useEffect(() => {
-    if (listRef.current && activeController) {
-      listRef.current.addEventListener('focus', scrollCardIntoView, {
+    const currentList = listRef.current
+    if (currentList && activeController) {
+      currentList.addEventListener('focus', scrollCardIntoView, {
         capture: true
       })
 
       return () => {
-        listRef.current?.removeEventListener('focus', scrollCardIntoView, {
+        currentList.removeEventListener('focus', scrollCardIntoView, {
           capture: true
         })
       }
     }
 
     return () => ({})
-  }, [listRef.current, activeController])
+  }, [activeController])
 
   return (
     <div

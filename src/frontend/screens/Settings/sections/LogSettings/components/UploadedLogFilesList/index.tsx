@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Launch, Delete } from '@mui/icons-material'
 
@@ -24,8 +24,9 @@ const UploadedLogFileItem = memo(function UploadedLogFileItem(
   const { url, name, uploadedAt } = props
   const { t } = useTranslation()
 
+  const [now] = useState(() => Date.now())
   const uploadedAgoText = useMemo(() => {
-    const minutesAgo = Math.round((Date.now() - uploadedAt) / 1000 / 60)
+    const minutesAgo = Math.round((now - uploadedAt) / 1000 / 60)
     const showHours = minutesAgo > 60
     if (showHours) {
       return t(
@@ -41,7 +42,7 @@ const UploadedLogFileItem = memo(function UploadedLogFileItem(
         minutesAgo: -minutesAgo
       }
     )
-  }, [(Date.now() - uploadedAt) / 1000 / 60 > 60])
+  }, [t, uploadedAt, now])
 
   return (
     <tr>
